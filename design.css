@@ -32,7 +32,7 @@ ul.nav-search li{
 ul#resList2 li{
     background: lightsteelblue;
     text-align: center;
-    -webkit-transform:translate(120px,0);
+    //-webkit-transform:translate(120px,0);
 }
 #rateButton,#friendButton{
     text-align: center;
