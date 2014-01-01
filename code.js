@@ -95,7 +95,9 @@ function buildPage(res)
         // Building each reminders record in the page
         for (var i = 0; i < 3; i++) {
             // $(resultsList).append("<div><id\"=listcontainer\"" + 3*i);
-            $(resultsList).append("<li><a draggable=\"true\" ondragstart=\"drag(event)\" onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
+//            $(resultsList).append("<li name=\"isd\" class=\"zoomProps\"><a onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
+            $(resultsList).append("<li data-transition=\"slide\"><a draggable=\"true\"  ondragstart=\"drag(event)\" onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
+
             //$(resultsList).append("<div>");
             $("#list"+i).css({"height":"30px","padding-top":"25px"});
             count++;
@@ -131,6 +133,7 @@ var removed = 0;
 $(document).on("swipeleft", "li", function(event) {
     event.preventDefault();
     var projIndex = $(this).index();
+    
     //var listitem = $(this),
             // These are the classnames used for the CSS transition
             //dir = event.type === "swipeleft" ? "left" : "right",
