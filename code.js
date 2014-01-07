@@ -309,11 +309,11 @@ function setPicText(){
        var img1=document.getElementById("img1");
     var img2=document.getElementById("img2");
     var ctx=img1.getContext("2d");
-    ctx.clearRect(0,0,img1.width^2,img1.height^2);
+    ctx.clearRect(0,0,$('#resultPage').width(),$('#resultPage').height());
     ctx.font="10px Arial";
      ctx.fillText("pic " + getValueZ() + "1",80,80);
     ctx=img2.getContext("2d");
-     ctx.clearRect(50,50,img2.width^2,img2.height^2);
+     ctx.clearRect(50,50,$('#resultPage').width(),$('#resultPage').height());
      ctx.font="10px Arial";
      ctx.fillText("pic " + getValueZ() + "2",80,80);
 }
