@@ -8,17 +8,25 @@
 
         <!-- JS -->
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
         <script type="text/javascript" src="code.js"></script> 
-         <script type="text/javascript" src="hammer.js"></script> 
+        <!--         <script type="text/javascript" src="hammer.js"></script> -->
         <!-- CSS -->
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
+        <!--        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />-->
         <link rel="stylesheet" type="text/css" href="design.css" />
+
     </head>
 
-    <body>
+    <body>  
+
+        <!--        <div id="loader" data-role="page" data-position="fixed">
+                    <div id="pp" data-role="content"></div>
+                </div>-->
+
         <!-- Main Page -->
         <div id="mainPage" data-role="page" data-position="fixed" class="ui-responsive-panel">
+
             <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="menuPanel" data-theme="d">
 
                 <ul data-role="listview" data-theme="d" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
@@ -45,31 +53,26 @@
                 <!-- panel content goes here -->
             </div><!-- /panel -->
             <header data-role="header" id="mainPageHeader" data-theme="d">
-                <a href="#menuPanel" data-icon="bars" data-iconpos="notext">Menu</a>
-                <p>CLU</p>
+                <a href="#menuPanel" id="menuPanelButton"  data-iconpos="notext"></a>
+                <!--                <p>CLU</p>-->
             </header>
 
             <div data-role="content" id="mainContent" align="center">
                 <form id="mainContentForm" > 
-                    <br>
+
                     <div align="center" id="speechToolMain">
-                        <input type="text" id="mainSpeech" placeholder="Search" value="" lang="en" onkeydown="if (event.keyCode === 13)
+                        <input type="text" id="mainSpeech" placeholder="Search Term" value="" lang="en" onkeydown="if (event.keyCode === 13)
                                     getCLU(document.getElementById('mainSpeech').value)"  autocomplete="on">
                     </div>
-                    <br>
-                    <!--<a data-role="button" id="idan" onclick="change();">Link button</a>-->
-                    <br>
-                    <img id="MainLogo" src="CLUlogo.PNG" alt="Hit me!"  align="center">
-                    <br>
                     <div id="CLUbutton">
-                        <img id="CLUbuttonMain" src="CLUbutton.PNG" alt="Click me!" onclick="getCLU(document.getElementById('mainSpeech').value)">
+                        <a href="" id="CLUbuttonMain" onclick="getCLU(document.getElementById('mainSpeech').value)"><span> GET A CLUE</span> </a>   
                     </div>
-                   
+
                 </form>
             </div>
         </div>
 
-        <!-- New Demo Page - Will be Result Page later-->
+        <!-- Result Page -->
         <div id="resultPage" data-role="page" data-position="fixed" class="ui-responsive-panel">
             <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="resultPanel" data-theme="d">
 
@@ -97,48 +100,50 @@
                 <!-- panel content goes here -->
             </div><!-- /panel -->
             <header data-role="header" id="resultPageHeader" data-theme="d">
-                <a href="#resultPanel" data-icon="bars" data-iconpos="notext"></a>
+                <a href="#resultPanel" id="resultPanelButton" data-iconpos="notext"></a>
                 <a href="" onclick="randomPage()" data-icon="star" data-iconpos="notext"></a>
-                <p>CLU</p>
+                <h1 id="resultTitle">GET A CLU</h1>
+                <div data-role="fieldcontain" ondrop="drop(event)">
+                    <input type="text" id="resultSearch" name="name" onkeydown="if (event.keyCode === 13)
+                                getCLU(document.getElementById('name').value)" value="" placeholder="Search" ondrop="drop(event)"/>
+                </div>
+
             </header>
 
-            <div data-role="content" id="resultContent" align="center"> 
-                <form id="resultContentForm" >
-                    <div data-role="fieldcontain" ondrop="drop(event)">
-                        <input type="text" name="name" onkeydown="if (event.keyCode === 13)
-                                    getCLU(document.getElementById('name').value)" id="name" value="" placeholder="Search" ondrop="drop(event)"/>
-                    </div>
-<!--                    <div align="center" id="resultSpeechTool" >
-                        <input type="text" id="resultSpeech"  onclick="setValue()">
-                    </div>-->
-                    <img id="img1" src="Neymargoldenball.jpg" alt="neymar1" width="100" height="100" onclick="fullScreen(document.getElementById('img1').src);" align="middle">
-                    <img id="img2" src="Neymar_Junior_the_Future_of_Brazil_2.jpg" alt="neymar2" width="100" height="100" onclick="fullScreen(document.getElementById('img2').src);" align="middle">
-                    <br>
-                    <br>
-                    <br> 
-                    <div id="listcontainer2">
-                        <ul data-role="listview" id="resList2" data-icon="false">
+            <!--<div id="resultImages">-->
+            <canvas id="img1"></canvas>
+                <canvas id="img2"></canvas>
+            <!--</div>-->
+            <!--<img  onclick="fullScreen(document.getElementById('img1').src);">-->
+            <!--                <img   onclick="fullScreen(document.getElementById('img2').src);">-->
+
+
+            <div data-role="content" id="resultContent"> 
+
+                <form id="resultContentForm">
+                    <div id="listcontainer2" align="center">
+                        <ul data-role="listview" id="resList2" data-icon="false" >
                         </ul>
                     </div>      
                 </form>
             </div>
 
-            <footer data-role="footer" id="resultPageFooter" data-position="fixed" data-theme="e">
-                <nav data-role="navbar" data-position="fixed" id="resultNavBar" > 
-                    <ul>
-                        <li ><a data-icon="home" href="#mainPage" > Home </a></li>
-                        <li ><a data-icon="star" href="" onclick="randomPage()" > Get A CLU </a></li>
-                        <li ><a data-icon="gear" href="" onclick="onBuild()" > Settings</a></li>
-                        <li> <a href="" onClick="getHistory()"> History </a></li>
-                        <li ><a data-icon="info" href="#aboutPage" > About</a></li>
-                    </ul>
-                </nav>
-            </footer>
+            <!--            <footer data-role="footer" id="resultPageFooter" data-position="fixed" data-theme="e">
+                            <nav data-role="navbar" data-position="fixed" id="resultNavBar" > 
+                                <ul>
+                                    <li ><a data-icon="home" href="#mainPage" > Home </a></li>
+                                    <li ><a data-icon="star" href="" onclick="randomPage()" > Get A CLU </a></li>
+                                    <li ><a data-icon="gear" href="" onclick="onBuild()" > Settings</a></li>
+                                    <li> <a href="" onClick="getHistory()"> History </a></li>
+                                    <li ><a data-icon="info" href="#aboutPage" > About</a></li>
+                                </ul>
+                            </nav>
+                        </footer>-->
         </div>
 
         <!-- About -->
         <div id="aboutPage" data-role="page" data-position="fixed">
-            <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="aboutPanel" data-theme="d">
+            <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="aboutPanelButton" data-theme="d">
 
                 <ul data-role="listview" data-theme="d" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
                     <li data-icon="delete" data-iconpos="left" id="listtt">
@@ -164,20 +169,21 @@
                 <!-- panel content goes here -->
             </div><!-- /panel -->
             <header data-role="header" id="aboutPageHeader" data-theme="d">
-                <nav data-role="navbar" id="aboutPageNav">
-                    <a href="#aboutPanel" data-icon="bars" data-iconpos="notext"></a>
-                    <p>About</p>
-                </nav>
+                <a href="#aboutPanelButton" data-iconpos="notext"></a>
+                <h1 id="aboutTitle"> ABOUT US</h1>
             </header>
             <div data-role="content" id="aboutContent" align="center">
                 <form id="aboutContentForm">
-                    <img id="aboutLogo" src="aboutLogo.PNG" alt="About us!" height="350" width="300" align="center">
-                    <div id="friendButton">
-                        <img id="friendButtonAbout" src="friendButton.PNG" alt="Click me!" height="40" width="150" onclick="rateUs();">
-                    </div>
-                    <br>
-                    <div id="rateButton">
-                        <img id="rateButtonAbout" src="rateButton.PNG" alt="Click me!" height="40" width="150" onclick="rateUs();">
+                    <div id="listcontainerAbout" align="center">
+                        <ul data-role="listview" id="aboutList" data-icon="false" >
+                            <li id='aboutUS'> <p> CLU IS AN APP CREATED 
+                                    <br>
+                                    BY STUDENTS AT IDC IN HERZELYA <br>
+                                    AS PART OF THE MILAB STUDIO</p></li>
+                            <li id='loveButton'> WON'T YOU SHOW US<br> SOME LOVE?</li>
+                            <li><a id='rateButton' onclick="rateUs()"> RATE US <br> WE REALLY APPRECITE IT </a></li>
+                            <li><a id='friendButton' onclick="tellFriend()"> TELL A FRIEND <br> DON'T KEEP THEM STUPID</a> </li>
+                        </ul>
                     </div>
                 </form>
             </div>

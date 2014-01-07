@@ -2,8 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 var result = null;
 var resultsList = null;
 var threeRes = null;
@@ -13,63 +11,77 @@ var length = 0;
 var historySearches = {};
 var historyList = null;
 var numberOfSearch = 0;
+var Val = null;
 
 function getCLU(value) {
+    Val = value;
     console.log("getCLu : " + value);
     if (value === "") {
-        alert("value cant be null");
+        console.log("value cant be null");
     } else {
-        var jsStr = '{"value" : value}';
-        var jsObj = eval("(" + jsStr + ")");
-//        var results = sendValueToServer(jsObj);
-        result = localSend(jsObj,value);
-        length = result.results.length;
-        historySearches[numberOfSearch] = value;
-        numberOfSearch++;
-        if (result === null) {
-            alert("no results")
-        } else {
-            other = JSON.parse(JSON.stringify(result));
-            threeRes = cutResults(other);
-            buildPage(threeRes);
+        var jsStr = "\{\"value\" :" + value + "}";
+        // var jsObj = eval("(" + jsStr + ")");
+        if(value.search(" ") !== -1){
+            value.replace(" ","_");
         }
+        sendValueToServer(value);
+//        var obj = "\{\"value\":" + "\"" + value + "\"" + "}";
+//        alert("\{\"value\":" + "\"" + value+ "\"" +"}"); 
+        //result = sendValueToServer("\{\"value\" :" + "\" + value+ \" +\"}");
+//         result = sendValueToServer(obj);
+//        result = localSend(obj, value);
+
     }
 }
 
-//function sendValueToServer(valInJson) {
-//    console.log("Get Clue About" + valInJson.value);
-//    event.preventDefault();
-//    $.ajax({
-//        type: "POST",
-//        url: 'localhost:8000',
-//        data: {
-//           'json' : valInJson
-//        },
-//        success: function(response) {
-//            console.log(response);
-//        }
-//    });
-//
-//    return false;
-//
-//}
 
-function localSend(obj,val) {
+
+function sendValueToServer(valInJson) {
+    console.log("Get Clue About " + valInJson);
+    event.preventDefault();
+    $.ajax({
+        type: "GET",
+        url: 'http://noanimrodidan.milab.idc.ac.il/?q='+ valInJson,
+        success: function(response) {
+            console.log(response);
+            result = response;
+            length = result.results.length;
+            if (result === null) {
+                console.log("no results");
+            } else {
+                other = JSON.parse(JSON.stringify(result));
+                threeRes = cutResults(other);
+                buildPage(threeRes);
+            }
+        }
+    });
+
+    return false;
+}
+
+function localSend(obj, val) {
     var resultAsJson = null;
     //post to server and get result as json
-    if(val ==="neymar"){
+    switch (val) {
+        case "Retention" :
+            resultAsJson = '{"results":[{"value":"Buisness Term","context":"AAA"},{"value":"Marketing","context":"BBB"},{"value":"customer service","context":"CCC"},{"value":"Consumer Behavior","context":"Retention is a term in customer behavior which indicate the lifetime of the user with the product"}]}';
+            break;
+        case "Consumer Behavior" :
+            resultAsJson = '{"results":[{"value":"Consumer buying behavior","context":"AAA"},{"value":"Psychology, decision making","context":"BBB"},{"value":"Marketing service","context":"CCC"}]}';
+            break;
+        case "Neymar" :
             resultAsJson = '{"results":[{"value":"Footballer","context":"is a Brazilian footballer"},{"value":"Barcelona","context":"plays for La Liga club FC Barcelona"},{"value":"Winger","context":"play as a forward or winger"},{"value":"Santos","context":"Neymar joined Santos in 2003"},{"value":"Ronaldinho","context":"Ronaldinho states he will be the best in the world"}]}';
-
-    }else{
-           resultAsJson = '{"results":[{"value":"POP","context":"is a Brazilian footballer"},{"value":"neymar","context":"plays for La Liga club FC Barcelona"},{"value":"Winger","context":"play as a forward or winger"},{"value":"Santos","context":"Neymar joined Santos in 2003"},{"value":"Ronaldinho","context":"Ronaldinho states he will be the best in the world"}]}';
+            break;
+        default :
+            resultAsJson = '{"results":[{"value":"Electrical engineering","context":"CCC"},{"value":"Thomas Edison","context":"BBB"},{"value":"Alternating current","context":"AAA"}]}';
     }
-    
-    if(resultAsJson !== null){
-    var resultAsString = JSON.parse(resultAsJson);
-    return resultAsString;
-}else{
-    alert("result it null!");
-}
+    console.log(resultAsJson);
+    if (resultAsJson !== null) {
+        var resultAsString = JSON.parse(resultAsJson);
+        return resultAsString;
+    } else {
+        alert("result it null!");
+    }
 }
 
 function goToWiki(value) {
@@ -77,18 +89,18 @@ function goToWiki(value) {
     window.open("http://en.wikipedia.org/wiki/" + value, "_self")
 }
 function getValueZ() {
-    console.log(document.getElementById('mainSpeech').value);
-    return document.getElementById('mainSpeech').value;
+//    console.log(Val);
+    return Val;
 }
 
 
 function buildPage(res)
 {
     $.mobile.changePage('#resultPage');
-    $('#resultSpeech').val(getValueZ());
-    $('#name').val(getValueZ());
+    $('#resultSearch').val(getValueZ());
     var listValues = res;
     $("#resList2").empty();
+    setPicText();
     resultsList = document.getElementById("resList2");
     if (listValues !== null)
     {
@@ -96,10 +108,9 @@ function buildPage(res)
         for (var i = 0; i < 3; i++) {
             // $(resultsList).append("<div><id\"=listcontainer\"" + 3*i);
 //            $(resultsList).append("<li name=\"isd\" class=\"zoomProps\"><a onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
-            $(resultsList).append("<li data-transition=\"slide\"><a draggable=\"true\"  ondragstart=\"drag(event)\" onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
-
-            //$(resultsList).append("<div>");
-            $("#list"+i).css({"height":"30px","padding-top":"25px"});
+            $(resultsList).append("<li><a  draggable=\"true\"  ondragstart=\"drag(event)\" onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
+            var color = setColor(i);
+            $("#list" + i).css({"height": "30px", "text-align": "center", "color": "white", "background-color": color, "padding-top": "25px"});
             count++;
             console.log("count:" + count);
             console.log("i:" + i);
@@ -124,7 +135,7 @@ function onBuild2() {
     alert("onBuild2");
 }
 $(document).on("swiperight", "li", function(event) {
-    alert(result.results[$(this).index()].value);
+    console.log(result.results[$(this).index()].value);
     getCLU(result.results[$(this).index()].value);
 });
 
@@ -133,23 +144,26 @@ var removed = 0;
 $(document).on("swipeleft", "li", function(event) {
     event.preventDefault();
     var projIndex = $(this).index();
-    
-    //var listitem = $(this),
-            // These are the classnames used for the CSS transition
-            //dir = event.type === "swipeleft" ? "left" : "right",
-            // Check if the browser supports the transform (3D) CSS transition
-            //transition = $.support.cssTransform3d ? dir : false;
 
-    if (removed === length  -1) {
+    //var listitem = $(this),
+    // These are the classnames used for the CSS transition
+    dir = event.type === "swipeleft" ? "left" : "right",
+//             Check if the browser supports the transform (3D) CSS transition
+            transition = $.support.cssTransform3d ? dir : false;
+    console.log(transition);
+    if (transition) {
+        console.log(transition);
+        $(this).removeClass("ui-btn-down-d").addClass(transition);
+    }
+    if (removed === length - 1) {
         removeFromList(projIndex);
         console.log("index:" + index);
         console.log("length:" + length);
         console.log("removed:" + removed);
         $("#resList2").append("<li  data-iconshadow=\"flase\"><a id=\"listWiki\" onclick=\"goToWiki(getValueZ())\" >" + "<span>" + "Dont Have A CLU? GO TO WIKI" + "</span></a></li>");
-//        $("#listwiki").css({"height":"30px","padding-top":"25px"});
-//         $("#resList2").listview("refresh");
+        $("#listWiki").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 1), "padding-top": "25px"});
         $("#resList2").append("<li data-icon=\"back\" data-iconpos=\"bottom\"><a id=\"listStartOver\" onclick=\"startOver( )\" >" + "<span>" + "Start Over" + "</span></a></li>");
-//        $("#listStartOver").css({"height":"30px","padding-top":"25px"});
+        $("#listStartOver").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 2), "padding-top": "25px"});
         $("#resList2").listview("refresh");
     } else {
         removeFromList(projIndex);
@@ -163,13 +177,12 @@ $(document).on("swipeleft", "li", function(event) {
         index++;
         console.log(resultsList);
     }
-
 });
-
 function getContext(i) {
     var action = "getContext(" + i + ")";
     if ($('#list' + i).attr("onClick") === action) {
         $('#list' + i).text(result.results[i].context);
+        $('#list' + i).css({"background-color": "white", "color": "#85C2FF"});
         $('#list' + i).attr("onClick", "getValue(" + i + ")");
     } else {
         alert("iisadasd");
@@ -188,13 +201,13 @@ function getValue(i) {
     var pp = "getValue(" + i + ")";
     if ($('#list' + i).attr("onClick") === pp) {
         $('#list' + i).text(result.results[i].value);
+        $('#list' + i).css({"background-color": setColor(i), "color": "white"});
         $('#list' + i).attr("onClick", "getContext(" + i + ")");
     }
     $('#listcontainer2').html(resultsList);
     console.log(i);
     console.log(resultsList);
 }
-
 
 function cutResults(res) {
     var newRes = res;
@@ -205,8 +218,8 @@ function cutResults(res) {
 function appendToList() {
     if (count !== length) {
         $("#resList2").append("<li><a onclick=\"getContext(" + count + ")\" id=\list" + count + ">" + "<span>" + result.results[count].value + "</span></a></li>");
-        $("#list"+count).css({"height":"30px","padding-top":"25px"});
-        //$("#resList2").listview("refresh");
+        var color = setColor(count);
+        $("#list" + count).css({"height": "30px", "text-align": "center", "color": "white", "background-color": color, "padding-top": "25px"});
         count++;
         console.log("count:" + count);
     }
@@ -215,8 +228,8 @@ function appendToList() {
 function removeFromList(index) {
     console.log(index);
     $("#list" + index).remove();
-    $("#list" + index).css("height",0);
-   // $("#resList2").listview("refresh");
+    $("#list" + index).css("height", 0);
+    // $("#resList2").listview("refresh");
 }
 
 function change() {
@@ -227,11 +240,15 @@ function rateUs() {
     alert("Currently on build - soon be available")
 }
 
-function randomPage() {
+function tellFriend() {
     alert("Currently on build - soon be available")
 }
+
+function randomPage() {
+    getCLU("Nikola Tesla");
+}
 function setValue() {
-    $("name").val(getValueZ());
+    $("resultSearch").val(getValueZ());
 }
 
 function allowDrop(ev)
@@ -245,12 +262,12 @@ function drag(ev)
 }
 function drop(ev)
 {
-    $('#name').val('');
+    $('#resultSearch').val('');
     ev.preventDefault();
     var data = ev.dataTransfer.getData("Text");
     console.log(document.getElementById(data));
     var intValue = parseInt(data.match(/[0-9]+/)[0], 10);
-    $('#name').val(result.results[intValue].value);
+    $('#resultSearch').val(result.results[intValue].value);
 }
 
 
@@ -272,3 +289,30 @@ function getHistory() {
 function fullScreen(url) {
     var myWindow = window.open(url, "_self", 'scrollbars=yes,resizable=yes,fullscreen=yes');
 }
+
+$("#resultTitle").text(getValueZ());
+
+function setColor(i) {
+    if (i % 2 === 0) {
+        console.log(i + "=" + "blue");
+        return "#3399FF";
+    } else {
+        console.log(i + "=" + "blueee");
+    }
+    return "#85C2FF";
+}
+
+function setPicText(){
+       var img1=document.getElementById("img1");
+    var img2=document.getElementById("img2");
+    var ctx=img1.getContext("2d");
+    ctx.clearRect(0,0,img1.width,img1.height);
+    ctx.font="10px Arial";
+     ctx.fillText("pic " + getValueZ() + "1",80,80);
+    ctx=img2.getContext("2d");
+     ctx.clearRect(50,50,img2.width,img2.height);
+     ctx.font="10px Arial";
+     ctx.fillText("pic " + getValueZ() + "2",80,80);
+}
+    
+ 
