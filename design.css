@@ -110,7 +110,7 @@ ul.nav-search li{
 
 
 
-#img1{
+/*#img1{
     width: 11em;
     height: 11em;
     border: 5px solid #000;
@@ -119,15 +119,16 @@ ul.nav-search li{
     width: 11em;
     height: 11em;
     border: 5px solid #000;
-    /*    float: left;
-        margin-left: 50%;*/
-    /* margin-top: 80%; */
-}
+        float: left;
+        margin-left: 50%;
+     margin-top: 80%; 
+}*/
 
-/*#resultImages {
-    width: 50%;
-    height: 50%;
-    float: left;*/
+#resultImages {
+    width: 100%;
+    height: 15em;
+    border: 5px solid #000;
+}
 
 #rateButton ,#friendButton{
         background-color: #3399FF;

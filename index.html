@@ -102,17 +102,19 @@
             <header data-role="header" id="resultPageHeader" data-theme="d">
                 <a href="#resultPanel" id="resultPanelButton" data-iconpos="notext"></a>
                 <a href="" onclick="randomPage()" data-icon="star" data-iconpos="notext"></a>
+                <div align="center" id="resultSerchBox" onclick="getCLU(document.getElementById('resultSearch').value)">
                 <h1 id="resultTitle">GET A CLU</h1>
+                </div>
                 <div data-role="fieldcontain" ondrop="drop(event)">
-                    <input type="text" id="resultSearch" name="name" onkeydown="if (event.keyCode === 13)
+                    <input type="text" id="resultSearch"  lang="en" name="name" onkeydown="if (event.keyCode === 13)
                                 getCLU(document.getElementById('name').value)" value="" placeholder="Search" ondrop="drop(event)"/>
                 </div>
 
             </header>
 
-            <!--<div id="resultImages">-->
-            <canvas id="img1"></canvas>
-                <canvas id="img2"></canvas>
+            <div id="resultImages"><h1 align="center" id="img11"> </h1></div>
+<!--            <canvas id="img1" align=""></canvas> -->
+<!--                <canvas id="img2"></canvas>-->
             <!--</div>-->
             <!--<img  onclick="fullScreen(document.getElementById('img1').src);">-->
             <!--                <img   onclick="fullScreen(document.getElementById('img2').src);">-->

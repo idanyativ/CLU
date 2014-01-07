@@ -100,7 +100,8 @@ function buildPage(res)
     $('#resultSearch').val(getValueZ());
     var listValues = res;
     $("#resList2").empty();
-    setPicText();
+    $("#img11").text("pic " + getValueZ() + " 1");
+//    setPicText();
     resultsList = document.getElementById("resList2");
     if (listValues !== null)
     {
@@ -306,7 +307,8 @@ function setColor(i) {
 }
 
 function setPicText(){
-       var img1=document.getElementById("img1");
+    $("#img11").text("asdasd");
+       var img1=document.getElementById(getValueZ());
     var img2=document.getElementById("img2");
     var ctx=img1.getContext("2d");
     ctx.clearRect(0,0,$('#resultPage').width(),$('#resultPage').height());
