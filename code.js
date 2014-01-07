@@ -160,15 +160,22 @@ $(document).on("swipeleft", "li", function(event) {
         console.log("index:" + index);
         console.log("length:" + length);
         console.log("removed:" + removed);
-        $("#resList2").append("<li  data-iconshadow=\"flase\"><a id=\"listWiki\" onclick=\"goToWiki(getValueZ())\" >" + "<span>" + "Dont Have A CLU? GO TO WIKI" + "</span></a></li>");
+        $("#resList2").append("<li  data-iconshadow=\"flase\"><a id=\"listWiki\" onclick=\"goToWiki(getValueZ())\" >"  + "Dont Have A CLU? GO TO WIKI" + "</a></li>");
         $("#listWiki").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 1), "padding-top": "25px"});
-        $("#resList2").append("<li data-icon=\"back\" data-iconpos=\"bottom\"><a id=\"listStartOver\" onclick=\"startOver( )\" >" + "<span>" + "Start Over" + "</span></a></li>");
+        $("#resList2").append("<li data-icon=\"back\" data-iconpos=\"bottom\"><a id=\"listStartOver\" onclick=\"startOver( )\" >"  + "Start Over" + "</a></li>");
         $("#listStartOver").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 2), "padding-top": "25px"});
         $("#resList2").listview("refresh");
     } else {
         removeFromList(projIndex);
         removed++;
         appendToList();
+//         $('#resList2').trigger('create');
+//        if ( $('#resList2').hasClass('ui-listview')) {
+//    $('#resList2').listview('refresh');
+//     } 
+//else {
+//    $('#resList2').trigger('create');
+//     }
         $("#resList2").listview("refresh");
         console.log("count:" + count);
         console.log("index:" + index);
@@ -182,16 +189,11 @@ function getContext(i) {
     var action = "getContext(" + i + ")";
     if ($('#list' + i).attr("onClick") === action) {
         $('#list' + i).text(result.results[i].context);
-        $('#list' + i).css({"background-color": "white", "color": "#85C2FF"});
         $('#list' + i).attr("onClick", "getValue(" + i + ")");
-    } else {
-        alert("iisadasd");
-        alert($('#list' + i));
-        $('#list' + i).text(result.results[i].value);
-        $('#list' + i).attr("onClick", "getContext(" + i + ")");
+        $('#list' + i).css({"background-color": "white", "color": "#85C2FF"});
+//        $("#resList2").listview("create");
     }
-
-    $('#listcontainer2').html(resultsList);
+//    $('#listcontainer2').html(resultsList);
     console.log(i);
     console.log(resultsList);
 }
@@ -201,10 +203,11 @@ function getValue(i) {
     var pp = "getValue(" + i + ")";
     if ($('#list' + i).attr("onClick") === pp) {
         $('#list' + i).text(result.results[i].value);
-        $('#list' + i).css({"background-color": setColor(i), "color": "white"});
         $('#list' + i).attr("onClick", "getContext(" + i + ")");
+        $('#list' + i).css({"background-color": setColor(i), "color": "white"});
+//         $("#resList2").listview("create");
     }
-    $('#listcontainer2').html(resultsList);
+//    $('#listcontainer2').html(resultsList);
     console.log(i);
     console.log(resultsList);
 }
@@ -217,7 +220,7 @@ function cutResults(res) {
 
 function appendToList() {
     if (count !== length) {
-        $("#resList2").append("<li><a onclick=\"getContext(" + count + ")\" id=\list" + count + ">" + "<span>" + result.results[count].value + "</span></a></li>");
+        $("#resList2").append("<li><a onclick=\"getContext(" + count + ")\" id=\list" + count + ">"  + result.results[count].value + "</a></li>");
         var color = setColor(count);
         $("#list" + count).css({"height": "30px", "text-align": "center", "color": "white", "background-color": color, "padding-top": "25px"});
         count++;
