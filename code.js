@@ -100,7 +100,7 @@ function buildPage(res)
     $('#resultSearch').val(getValueZ());
     var listValues = res;
     $("#resList2").empty();
-    $("#img11").text("pic " + getValueZ() + " 1");
+    $("#img11").text("pic " + getValueZ() + " 1").css("font-size","small");
 //    setPicText();
     resultsList = document.getElementById("resList2");
     if (listValues !== null)
