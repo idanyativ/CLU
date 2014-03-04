@@ -98,14 +98,17 @@ ul.nav-search li{
 }
 
 #resultTitle{
-    color: #3399FF;
+    color: white;
+    //font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    font-family: Geneva, Tahoma, Verdana, sans-serif;
 }
+
 
 #resultSearch,#aboutList{
      font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-    background-color: #3399FF;
     text-align: center;
     font-size: 150%;
+    border-bottom:solid #ff0000;
 }
 
 
@@ -126,8 +129,10 @@ ul.nav-search li{
 
 #resultImages {
     width: 100%;
-    height: 5em;
+    height: 17em;
     border: 5px solid #000;
+    /* position: relative; */
+    /* background-color: red; */
 }
 
 #rateButton ,#friendButton{
@@ -175,3 +180,58 @@ ul#historyList li{
     margin-top: -20px;
     margin-left: -15px;
 }*/
+#resultSearchBox,#resultPageHeader{
+    background-color: rgb(254,31,75);
+}
+#resultSearch{
+    position: fixed;  left: 0;
+}
+
+/*#lineup{
+    color: white;
+    font-size: 2em;
+    background-color: black;
+    opacity: 0.6;
+    height: 23%;
+    width: 100%;
+    bottom: 0px;
+    position: absolute;
+    top: 50%;
+}*/
+#loader{
+    position: fixed; top: 0; right: 0; left: 0; bottom: 0;
+    background-color: black;
+    opacity: 0.75;
+    background-image:  url('loader.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+/*li.ui-li.left {
+			-webkit-transition: -webkit-transform 250ms ease;
+			-webkit-transform: translateX(-100%);
+			-moz-transition: -moz-transform 250ms ease;
+			-moz-transform: translateX(-100%);
+			-o-transition: -o-transform 250ms ease;
+			-o-transform: translateX(-100%);
+			transition: transform 250ms ease;
+			transform: translateX(-100%);
+			border-top-width: 0;  We switch to border bottom on previous list item 
+			border-right-width: 1px;
+		}
+		 Right transition 
+		li.ui-li.right {
+			-webkit-transition: -webkit-transform 250ms ease;
+			-webkit-transform: translateX(100%);
+			-moz-transition: -moz-transform 250ms ease;
+			-moz-transform: translateX(100%);
+			-o-transition: -o-transform 250ms ease;
+			-o-transform: translateX(100%);
+			transition: transform 250ms ease;
+			transform: translateX(100%);
+			border-top-width: 0;  We switch to border bottom on previous list item 
+			border-left-width: 1px;
+		}
+                
+                li.ui-li.border {
+			border-bottom-width: 1px;
+		}*/

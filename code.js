@@ -4,54 +4,78 @@
  */
 var result = null;
 var resultsList = null;
-var threeRes = null;
-var count = 0
-var other = null;
+var threeResults = null;
+var count = 0;
+var resultsInString = null;
 var length = 0;
 var historySearches = {};
 var historyList = null;
 var numberOfSearch = 0;
-var Val = null;
-
-function getCLU(value) {
-    Val = value;
+var value = null;
+var image = null;
+var firstLoad = false;
+/**
+ * 
+ * @param inputValue - Get the value from the user
+ * @ build the 
+ */
+function getCLU(inputValue) {
+    
+    value = inputValue;
     console.log("getCLu : " + value);
+ 
+    // valid that value isn't null
     if (value === "") {
         console.log("value cant be null");
     } else {
-        var jsStr = "\{\"value\" :" + value + "}";
-        // var jsObj = eval("(" + jsStr + ")");
+        // replace space to underline
         if(value.search(" ") !== -1){
             value.replace(" ","_");
         }
+        // send value to server
         sendValueToServer(value);
-//        var obj = "\{\"value\":" + "\"" + value + "\"" + "}";
-//        alert("\{\"value\":" + "\"" + value+ "\"" +"}"); 
-        //result = sendValueToServer("\{\"value\" :" + "\" + value+ \" +\"}");
-//         result = sendValueToServer(obj);
-//        result = localSend(obj, value);
+       
+        
+ // use to test locally 
+ /**
+        result = localSend(value);
+        other = JSON.parse(JSON.stringify(result));
+        threeRes = cutResults(other);
+         buildPage(threeRes);
+ **/
 
     }
 }
 
 
-
-function sendValueToServer(valInJson) {
-    console.log("Get Clue About " + valInJson);
-    event.preventDefault();
+/**
+ * 
+ * @param  value - get the input value and send it to server
+ * @returns {Boolean}
+ */
+function sendValueToServer(value) {
+    console.log("Get Clue About " + value);
+//    preventDefault();
     $.ajax({
         type: "GET",
-        url: 'http://noanimrodidan.milab.idc.ac.il/?q='+ valInJson,
+        url: 'http://noanimrodidan.milab.idc.ac.il/?q='+ value,
         success: function(response) {
             console.log(response);
             result = response;
-            length = result.results.length;
+            
+            // valid that the results isn't null
             if (result === null) {
                 console.log("no results");
             } else {
-                other = JSON.parse(JSON.stringify(result));
-                threeRes = cutResults(other);
-                buildPage(threeRes);
+                
+                // if not null - build the page 
+                length = result.results.length;
+                resultsInString = JSON.parse(JSON.stringify(result));
+                threeResults = cutResults(resultsInString);
+                image = result.imageURL;
+                   
+                buildPage(threeResults,image);
+                
             }
         }
     });
@@ -59,7 +83,12 @@ function sendValueToServer(valInJson) {
     return false;
 }
 
-function localSend(obj, val) {
+/**
+ * Local Testing
+ * @param {type} val
+ * @returns {Array|Object}
+ */
+function localSend(val) {
     var resultAsJson = null;
     //post to server and get result as json
     switch (val) {
@@ -84,39 +113,54 @@ function localSend(obj, val) {
     }
 }
 
+/**
+ * Open the input value in wikipedia
+ * @param {type} value
+ * @returns {undefined}
+ */
 function goToWiki(value) {
     console.log(value);
-    window.open("http://en.wikipedia.org/wiki/" + value, "_self")
-}
-function getValueZ() {
-//    console.log(Val);
-    return Val;
+    window.open("http://en.wikipedia.org/wiki/" + value, "_self");
 }
 
+function getInputValue() {
+//    console.log("The User input is: " + value);
+    return value;
+}
 
-function buildPage(res)
+/**
+ * Get the three results json and build it into the page
+ * @param {type} res
+ * @returns {undefined}
+ */
+function buildPage(res,image)
 {
     $.mobile.changePage('#resultPage');
-    $('#resultSearch').val(getValueZ());
+    $('#resultSearch1').val(getInputValue());
+   $('#resultImages').css({"background-image":"url"+"("+image+")","background-repeat": "no-repeat","background-size":"100% 100%"});
+   showOnlyValue(); 
+
+    
     var listValues = res;
     $("#resList2").empty();
-    $("#img11").text("pic " + getValueZ() + " 1").css("font-size","small");
+   // $("#img11").text("pic " + getInputValue() + " 1").css("font-size","small");
 //    setPicText();
     resultsList = document.getElementById("resList2");
     if (listValues !== null)
     {
         // Building each reminders record in the page
         for (var i = 0; i < 3; i++) {
-            // $(resultsList).append("<div><id\"=listcontainer\"" + 3*i);
-//            $(resultsList).append("<li name=\"isd\" class=\"zoomProps\"><a onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
-            $(resultsList).append("<li><a  draggable=\"true\"  ondragstart=\"drag(event)\" onclick=\"getContext(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
+            $(resultsList).append("<li><a onclick=\"getContext2(" + i + ")\" data-iconshadow=\"false\"  data-icon=\"false\" id=\list" + i + ">" + result.results[i].value + "</a></li>");
             var color = setColor(i);
-            $("#list" + i).css({"height": "30px", "text-align": "center", "color": "white", "background-color": color, "padding-top": "25px"});
+            $("#list" + i).css({"height": "30px", "text-align": "center", "color": "grey", "background-color": "white", "padding-top": "25px",  "font-family": "Geneva, Tahoma, Verdana, sans-serif","text-overflow": "ellipsis"});
             count++;
             console.log("count:" + count);
             console.log("i:" + i);
             console.log(resultsList);
+            
+    
         }
+        
     }
     console.log("listString=" + resultsList);
     $('#resultPage').html();
@@ -137,67 +181,111 @@ function onBuild2() {
 }
 $(document).on("swiperight", "li", function(event) {
     console.log(result.results[$(this).index()].value);
-    getCLU(result.results[$(this).index()].value);
+    searchItem(this,result.results[$(this).index()].value);
+    
 });
-
+$(document).on("swipeleft", "li", function(e){
+     removeItem(this);
+//     setTimeout(function(){alert("Hello")},3000);
+//     setTimeout(function(){appendToList()}(),5000000);
+ 
+//   removeItem(this);
+//           defer.then(appendToList());
+//   console.log("countaaaaaaaaaaaaaaaaaa:" + count);
+//   console.log("length:" + length);
+//           appendToList();
+//        $("#resList2").listview("refresh");
+//        console.log("count:" + count);
+//        console.log("index:" + index);
+//        console.log("length:" + length);
+//        console.log("removed:" + removed);
+//        index++;
+//        console.log(resultsList);
+});
 var index = 0;
 var removed = 0;
-$(document).on("swipeleft", "li", function(event) {
-    event.preventDefault();
-    var projIndex = $(this).index();
-
-    //var listitem = $(this),
-    // These are the classnames used for the CSS transition
-    dir = event.type === "swipeleft" ? "left" : "right",
-//             Check if the browser supports the transform (3D) CSS transition
-            transition = $.support.cssTransform3d ? dir : false;
-    console.log(transition);
-    if (transition) {
-        console.log(transition);
-        $(this).removeClass("ui-btn-down-d").addClass(transition);
-    }
-    if (removed === length - 1) {
-        removeFromList(projIndex);
-        console.log("index:" + index);
-        console.log("length:" + length);
-        console.log("removed:" + removed);
-        $("#resList2").append("<li  data-iconshadow=\"flase\"><a id=\"listWiki\" onclick=\"goToWiki(getValueZ())\" >"  + "Dont Have A CLU? GO TO WIKI" + "</a></li>");
-        $("#listWiki").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 1), "padding-top": "25px"});
-        $("#resList2").append("<li data-icon=\"back\" data-iconpos=\"bottom\"><a id=\"listStartOver\" onclick=\"startOver( )\" >"  + "Start Over" + "</a></li>");
-        $("#listStartOver").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 2), "padding-top": "25px"});
-        $("#resList2").listview("refresh");
-    } else {
-        removeFromList(projIndex);
-        removed++;
-        appendToList();
-//         $('#resList2').trigger('create');
-//        if ( $('#resList2').hasClass('ui-listview')) {
-//    $('#resList2').listview('refresh');
-//     } 
-//else {
-//    $('#resList2').trigger('create');
-//     }
-        $("#resList2").listview("refresh");
-        console.log("count:" + count);
-        console.log("index:" + index);
-        console.log("length:" + length);
-        console.log("removed:" + removed);
-        index++;
-        console.log(resultsList);
-    }
-});
+//$(document).on("swiperight", "li", function(event) {
+//    event.preventDefault();
+//    var projIndex = $(this).index();
+//
+//    //var listitem = $(this),
+//    // These are the classnames used for the CSS transition
+//    dir = event.type === "swipeleft" ? "left" : "right",
+////             Check if the browser supports the transform (3D) CSS transition
+//            transition = $.support.cssTransform3d ? dir : false;
+//    console.log(transition);
+////    if (transition) {
+////        console.log(transition);
+////        $(this).removeClass("ui-btn-down-d").addClass(transition);
+////    }
+//    if (removed === length - 1) {
+//        removeFromList(projIndex);
+//        console.log("index:" + index);
+//        console.log("length:" + length);
+//        console.log("removed:" + removed);
+//        $("#resList2").append("<li  data-iconshadow=\"flase\"><a id=\"listWiki\" onclick=\"goToWiki(getValueZ())\" >"  + "Dont Have A CLU? GO TO WIKI" + "</a></li>");
+//        $("#listWiki").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 1), "padding-top": "25px"});
+//        $("#resList2").append("<li data-icon=\"back\" data-iconpos=\"bottom\"><a id=\"listStartOver\" onclick=\"startOver( )\" >"  + "Start Over" + "</a></li>");
+//        $("#listStartOver").css({"height": "30px", "text-align": "center", "color": "white", "background-color": setColor(length + 2), "padding-top": "25px"});
+//        $("#resList2").listview("refresh");
+//    } else {
+//        removeFromList(projIndex);
+//        removed++;
+//        appendToList();
+//        $("#resList2").listview("refresh");
+//        console.log("count:" + count);
+//        console.log("index:" + index);
+//        console.log("length:" + length);
+//        console.log("removed:" + removed);
+//        index++;
+//        console.log(resultsList);
+//    }
+//});
 function getContext(i) {
     var action = "getContext(" + i + ")";
     if ($('#list' + i).attr("onClick") === action) {
         $('#list' + i).text(result.results[i].context);
         $('#list' + i).attr("onClick", "getValue(" + i + ")");
         $('#list' + i).css({"background-color": "white", "color": "#85C2FF"});
-//        $("#resList2").listview("create");
     }
-//    $('#listcontainer2').html(resultsList);
+
     console.log(i);
     console.log(resultsList);
 }
+
+function getContext2(i) {
+    var action = "getContext2(" + i + ")";
+//    var valueAndContext = getInputValue(); 
+    if ($('#list' + i).attr("onClick") === action) {
+        $('#lineup').html(getInputValue() + "-" + result.results[i].context).css({"font-size":"100%"});
+        $('#lineup').css({top:'50%'});
+        $('#lineup').animate({height:'80%'});
+        $('#lineup').attr("onClick", "showOnlyValue()");
+    }
+    console.log(i);
+    console.log(resultsList);
+}
+
+function showOnlyValue(){
+    $('#lineup').css({
+    "color": "white",
+    "font-size": "2em",
+    "background-color": "black",
+    "opacity": "0.6",
+    "height": "7%",
+    "width": "100%",
+    "bottom": "0px",
+    "position": "relative",
+    "top": "80%"
+});
+$('#lineup').text(getInputValue());
+var action = "onclick()";
+if($('#lineup').attr("onclick")=== action){
+    $('#lineup').removeAttribute("onclick");
+}
+}
+
+
 
 
 function getValue(i) {
@@ -206,9 +294,7 @@ function getValue(i) {
         $('#list' + i).text(result.results[i].value);
         $('#list' + i).attr("onClick", "getContext(" + i + ")");
         $('#list' + i).css({"background-color": setColor(i), "color": "white"});
-//         $("#resList2").listview("create");
     }
-//    $('#listcontainer2').html(resultsList);
     console.log(i);
     console.log(resultsList);
 }
@@ -220,20 +306,25 @@ function cutResults(res) {
 }
 
 function appendToList() {
-    if (count !== length) {
+//    if (count !== length) {
         $("#resList2").append("<li><a onclick=\"getContext(" + count + ")\" id=\list" + count + ">"  + result.results[count].value + "</a></li>");
-        var color = setColor(count);
-        $("#list" + count).css({"height": "30px", "text-align": "center", "color": "white", "background-color": color, "padding-top": "25px"});
+//        var color = setColor(count);
+ $("#list" + count).css({"text-align": "center", "color": "grey", "background-color": "white", "padding": "25px",  "font-family": "Geneva, Tahoma, Verdana, sans-serif","text-overflow": "ellipsis"});
+      //  $("#list" + count).css({"height": "30px", "text-align": "center", "color": "white", "background-color": color, "padding-top": "25px","text-overflow": "ellipsis"});
         count++;
         console.log("count:" + count);
-    }
+//    }
 }
 
 function removeFromList(index) {
     console.log(index);
+    $("#list" + index).animate({width: 'toggle'}, function(){
+            // And fade in the menu
+            $("#list" + index).fadeOut();
+        });
     $("#list" + index).remove();
     $("#list" + index).css("height", 0);
-    // $("#resList2").listview("refresh");
+    
 }
 
 function change() {
@@ -241,18 +332,18 @@ function change() {
 }
 
 function rateUs() {
-    alert("Currently on build - soon be available")
+    alert("Currently on build - soon be available");
 }
 
 function tellFriend() {
-    alert("Currently on build - soon be available")
+    alert("Currently on build - soon be available");
 }
 
 function randomPage() {
     getCLU("Nikola Tesla");
 }
 function setValue() {
-    $("resultSearch").val(getValueZ());
+    $("resultSearch").val(getInputValue());
 }
 
 function allowDrop(ev)
@@ -278,7 +369,7 @@ function drop(ev)
 function startOver() {
     index = 0;
     count = 0;
-    getCLU(getValueZ());
+    getCLU(getInputValue());
 }
 
 function getHistory() {
@@ -294,7 +385,7 @@ function fullScreen(url) {
     var myWindow = window.open(url, "_self", 'scrollbars=yes,resizable=yes,fullscreen=yes');
 }
 
-$("#resultTitle").text(getValueZ());
+$("#resultTitle").text(getInputValue());
 
 function setColor(i) {
     if (i % 2 === 0) {
@@ -308,16 +399,96 @@ function setColor(i) {
 
 function setPicText(){
     $("#img11").text("asdasd");
-       var img1=document.getElementById(getValueZ());
+       var img1=document.getElementById(getInputValue());
     var img2=document.getElementById("img2");
     var ctx=img1.getContext("2d");
     ctx.clearRect(0,0,$('#resultPage').width(),$('#resultPage').height());
     ctx.font="10px Arial";
-     ctx.fillText("pic " + getValueZ() + "1",80,80);
+     ctx.fillText("pic " + getInputValue() + "1",80,80);
     ctx=img2.getContext("2d");
      ctx.clearRect(50,50,$('#resultPage').width(),$('#resultPage').height());
      ctx.font="10px Arial";
-     ctx.fillText("pic " + getValueZ() + "2",80,80);
+     ctx.fillText("pic " + getInputValue() + "2",80,80);
 }
     
- 
+function removeItem(item){
+    var li = $(item);
+    var contents = $(li.children()[0]);
+    var item = contents.text(); // Get the item value
+    var itemId = contents.attr("id");
+    
+    var delButton = $("<a>").text("Yes").click(function(e){ 
+            // Delete button handler, fade out menu and remove the row
+            e.stopPropagation();
+            menu.fadeOut("slow",function(){
+                li.remove();
+                // Do something in order to delete item, send request to server or similar
+               // alert("Deleted " + item + " with ID = " + itemId);
+                appendToList();
+            });
+        });
+        var cancelButton = $("<a>").text("No").click(function(e){
+            // Cancel Handler, remove menu and show the item
+            e.stopPropagation(); 
+            menu.fadeOut("slow",function(){
+               contents.animate({width: 'toggle'}, function(){
+                   menu.remove();
+                });
+            }); 
+        });
+            
+        // Create the menu
+        var menu = $("<span />").append("Remove Value? - ").append(delButton).append(" | ").append(cancelButton)
+            .css("display", "none")
+            .addClass("menu");
+        
+        // Insert the menu
+        contents.after(menu);   
+        // Slide the item 
+        contents.animate({width: 'toggle'}, function(){
+            // And fade in the menu
+            menu.fadeIn();
+        });
+}
+
+function searchItem(item,nextValue){
+    var li = $(item);
+    console.log(li);
+    var contents = $(li.children()[0]);
+    var item = contents.text(); // Get the item value
+    var itemId = contents.attr("id");
+    
+    var delButton = $("<a>").text("Yes").click(function(e){ 
+            // Delete button handler, fade out menu and remove the row
+            e.stopPropagation();
+            menu.fadeOut("slow",function(){
+                li.remove();
+                // Do something in order to delete item, send request to server or similar
+             //   alert("Deleted " + item + " with ID = " + itemId);
+                getCLU(nextValue);
+                
+            });
+        });
+        var cancelButton = $("<a>").text("No").click(function(e){
+            // Cancel Handler, remove menu and show the item
+            e.stopPropagation(); 
+            menu.fadeOut("slow",function(){
+               contents.animate({width: 'toggle'}, function(){
+                   menu.remove();
+                });
+            }); 
+        });
+            
+        // Create the menu
+        var menu = $("<span />").append("Search Next Value? - ").append(delButton).append(" | ").append(cancelButton)
+            .css("display", "none")
+            .addClass("menu");
+        
+        // Insert the menu
+        contents.after(menu);   
+        // Slide the item 
+        contents.animate({width: 'toggle'}, function(){
+            // And fade in the menu
+            menu.fadeIn();
+        });
+}
