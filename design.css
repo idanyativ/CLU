@@ -1,7 +1,7 @@
 /* 
     Document   : design
     Created on : 12/11/2013, 21:51:07
-    Author     : עידן
+    Author     : ����
     Description:
         Purpose of the stylesheet follows.
 */
@@ -101,6 +101,7 @@ ul.nav-search li{
     color: white;
     //font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
     font-family: Geneva, Tahoma, Verdana, sans-serif;
+    /* height: 20%; */
 }
 
 
@@ -181,7 +182,10 @@ ul#historyList li{
     margin-left: -15px;
 }*/
 #resultSearchBox,#resultPageHeader{
-    background-color: rgb(254,31,75);
+    background-color: rgb(9,193,181);
+    /* width: 50%; */
+    /* height: 5%; */
+    top: 5%;
 }
 #resultSearch{
     position: fixed;  left: 0;
@@ -198,14 +202,14 @@ ul#historyList li{
     position: absolute;
     top: 50%;
 }*/
-#loader{
+/*#loader{
     position: fixed; top: 0; right: 0; left: 0; bottom: 0;
     background-color: black;
     opacity: 0.75;
     background-image:  url('loader.gif');
     background-repeat: no-repeat;
     background-position: center;
-}
+}*/
 /*li.ui-li.left {
 			-webkit-transition: -webkit-transform 250ms ease;
 			-webkit-transform: translateX(-100%);
@@ -235,3 +239,8 @@ ul#historyList li{
                 li.ui-li.border {
 			border-bottom-width: 1px;
 		}*/
+
+
+#resultPageContainer{
+    /* height: 20%; */
+}
